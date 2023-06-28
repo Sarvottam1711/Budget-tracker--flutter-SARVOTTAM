@@ -1,7 +1,5 @@
 import 'package:expense/controllers/db_helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:expense/static.dart' as Static;
 import 'package:flutter/services.dart';
 
 class AddExpenseNoGradient extends StatefulWidget {
@@ -14,7 +12,7 @@ class AddExpenseNoGradient extends StatefulWidget {
 class _AddExpenseNoGradientState extends State<AddExpenseNoGradient> {
   DateTime selectedDate = DateTime.now();
   int? amount;
-  String note = "Expence";
+  String note = "Expense";
   String type = "Income";
 
   List<String> months = [
@@ -34,10 +32,11 @@ class _AddExpenseNoGradientState extends State<AddExpenseNoGradient> {
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -51,276 +50,147 @@ class _AddExpenseNoGradientState extends State<AddExpenseNoGradient> {
       appBar: AppBar(
         toolbarHeight: 0.0,
       ),
-      backgroundColor: Color(0xffe2e7ef),
-      //
-      body: ListView(
-        padding: EdgeInsets.all(
-          12.0,
-        ),
-        children: [
-          Text(
-            "\nAdd Transaction",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.w700,
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "Add Transaction",
+              style: TextStyle(
+                fontSize: 32.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          //
-          SizedBox(
-            height: 20.0,
-          ),
-          //
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Static.PrimaryColor,
-                  borderRadius: BorderRadius.circular(
-                    16.0,
-                  ),
-                ),
-                padding: EdgeInsets.all(
-                  12.0,
-                ),
-                child: Icon(
+            SizedBox(height: 24.0),
+            Row(
+              children: [
+                Icon(
                   Icons.attach_money,
                   size: 24.0,
-                  // color: Colors.grey[700],
-                  color: Colors.white,
+                  color: Colors.blue,
                 ),
-              ),
-              SizedBox(
-                width: 12.0,
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "0",
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(
-                    fontSize: 24.0,
-                  ),
-                  onChanged: (val) {
-                    try {
-                      amount = int.parse(val);
-                    } catch (e) {
-                      // show Error
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.red,
-                          duration: Duration(
-                            seconds: 2,
-                          ),
-                          content: Row(
-                            children: [
-                              Icon(
-                                Icons.info_outline,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 6.0,
-                              ),
-                              Text(
-                                "Enter only Numbers as Amount",
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  keyboardType: TextInputType.number,
-                  // textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-          //
-          SizedBox(
-            height: 20.0,
-          ),
-          //
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Static.PrimaryColor,
-                  borderRadius: BorderRadius.circular(
-                    16.0,
+                SizedBox(width: 12.0),
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "0",
+                      labelText: "Amount",
+                    ),
+                    style: TextStyle(
+                      fontSize: 24.0,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        amount = int.tryParse(val);
+                      });
+                    },
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                 ),
-                padding: EdgeInsets.all(
-                  12.0,
-                ),
-                child: Icon(
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Icon(
                   Icons.description,
                   size: 24.0,
-                  // color: Colors.grey[700],
-                  color: Colors.white,
+                  color: Colors.blue,
                 ),
-              ),
-              SizedBox(
-                width: 12.0,
-              ),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: "Note on Transaction",
-                    border: InputBorder.none,
-                  ),
-                  style: TextStyle(
-                    fontSize: 20.0,
-                  ),
-                  onChanged: (val) {
-                    note = val;
-                  },
-                ),
-              ),
-            ],
-          ),
-          //
-          SizedBox(
-            height: 20.0,
-          ),
-          //
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Static.PrimaryColor,
-                  borderRadius: BorderRadius.circular(
-                    16.0,
+                SizedBox(width: 12.0),
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Note on Transaction",
+                      labelText: "Note",
+                    ),
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                    onChanged: (val) {
+                      setState(() {
+                        note = val;
+                      });
+                    },
                   ),
                 ),
-                padding: EdgeInsets.all(
-                  12.0,
-                ),
-                child: Icon(
-                  Icons.attach_money,
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Icon(
+                  Icons.date_range,
                   size: 24.0,
-                  // color: Colors.grey[700],
-                  color: Colors.white,
+                  color: Colors.blue,
                 ),
-              ),
-              SizedBox(
-                width: 12.0,
-              ),
-              ChoiceChip(
-                label: Text(
-                  "Income",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: type == "Income" ? Colors.white : Colors.black,
+                SizedBox(width: 12.0),
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                    child: Text(
+                      "${selectedDate.day} ${months[selectedDate.month - 1]}",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.grey[700],
+                      ),
+                    ),
                   ),
                 ),
-                selectedColor: Static.PrimaryColor,
-                onSelected: (val) {
-                  if (val) {
+              ],
+            ),
+            SizedBox(height: 16.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ChoiceChip(
+                  label: Text(
+                    "Income",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: type == "Income" ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  selected: type == "Income",
+                  onSelected: (val) {
                     setState(() {
                       type = "Income";
                       if (note.isEmpty || note == "Expense") {
                         note = 'Income';
                       }
                     });
-                  }
-                },
-                selected: type == "Income" ? true : false,
-              ),
-              SizedBox(
-                width: 8.0,
-              ),
-              ChoiceChip(
-                label: Text(
-                  "Expense",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: type == "Expense" ? Colors.white : Colors.black,
-                  ),
+                  },
+                  selectedColor: Colors.green,
                 ),
-                selectedColor: Static.PrimaryColor,
-                onSelected: (val) {
-                  if (val) {
+                SizedBox(width: 8.0),
+                ChoiceChip(
+                  label: Text(
+                    "Expense",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: type == "Expense" ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  selected: type == "Expense",
+                  onSelected: (val) {
                     setState(() {
                       type = "Expense";
-
                       if (note.isEmpty || note == "Income") {
                         note = 'Expense';
                       }
                     });
-                  }
-                },
-                selected: type == "Expense" ? true : false,
-              ),
-            ],
-          ),
-          //
-          SizedBox(
-            height: 20.0,
-          ),
-          //
-          SizedBox(
-            height: 50.0,
-            child: TextButton(
-              onPressed: () {
-                _selectDate(context);
-                //
-                // to make sure that no keyboard is shown after selecting Date
-                FocusScope.of(context).unfocus();
-              },
-              style: ButtonStyle(
-                padding: MaterialStateProperty.all(
-                  EdgeInsets.zero,
+                  },
+                  selectedColor: Colors.red,
                 ),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Static.PrimaryColor,
-                      borderRadius: BorderRadius.circular(
-                        16.0,
-                      ),
-                    ),
-                    padding: EdgeInsets.all(
-                      12.0,
-                    ),
-                    child: Icon(
-                      Icons.date_range,
-                      size: 24.0,
-                      // color: Colors.grey[700],
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 12.0,
-                  ),
-                  Text(
-                    "${selectedDate.day} ${months[selectedDate.month - 1]}",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
-          ),
-          //
-          SizedBox(
-            height: 20.0,
-          ),
-          //
-          SizedBox(
-            height: 50.0,
-            child: ElevatedButton(
+            SizedBox(height: 24.0),
+            ElevatedButton(
               onPressed: () {
                 if (amount != null) {
                   DbHelper dbHelper = DbHelper();
@@ -331,7 +201,7 @@ class _AddExpenseNoGradientState extends State<AddExpenseNoGradient> {
                     SnackBar(
                       backgroundColor: Colors.red[700],
                       content: Text(
-                        "Please enter a valid Amount !",
+                        "Please enter a valid Amount!",
                         style: TextStyle(
                           fontSize: 16.0,
                           color: Colors.white,
@@ -341,16 +211,19 @@ class _AddExpenseNoGradientState extends State<AddExpenseNoGradient> {
                   );
                 }
               },
-              child: Text(
-                "Add",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.w600,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
+                  "Add",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
